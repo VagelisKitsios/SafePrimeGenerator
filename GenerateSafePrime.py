@@ -1,8 +1,9 @@
-import argparse
-import sys
+import sys, argparse
+from argparse import ArgumentTypeError
 from random import getrandbits
 from sympy import primerange
 from gmpy2 import is_strong_bpsw_prp as isprime
+from sympy.core.facts import apply_beta_to_alpha_route
 
 
 def safe_prime_generator(bits: int):
@@ -35,12 +36,11 @@ def safe_prime_generator(bits: int):
 
 def main(args):
     # parse input
-    if len(args) != 1 and args[0].isdigit():
-        raise argparse.ArgumentTypeError("Invalid input")
-    N = int(args[0])
-    if N < 6:
-        raise argparse.ArgumentTypeError("Invalid input")
-    print(safe_prime_generator(N))
+    if len(args) != 1:
+        raise ArgumentTypeError("Invalid number of arguments")
+    elif not args[0].isdigit() and int(args[0]) >= 6:
+        raise argparse.ArgumentTypeError("Input must be an integer greater than 5")
+    print(safe_prime_generator(int(args[0])))
 
 if __name__ == "__main__":
     main(sys.argv[1:])
