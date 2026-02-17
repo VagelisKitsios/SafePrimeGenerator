@@ -1,3 +1,4 @@
+import argparse
 import sys
 from random import getrandbits
 from sympy import primerange
@@ -15,7 +16,7 @@ def safe_prime_generator(bits: int):
         return True
 
     n = getrandbits(bits-1)   # generate a random 2048-bit number
-    if n.bit_length() < bits-1:
+    if n.bit_length() < bits-1: # if the leftmost bit happens to be 0
         n += 2**(bits-2)
     n -= (n % 12) + 1   # a safe prime must be of the form p = 12k - 1
     n2 = n - 12
@@ -26,15 +27,20 @@ def safe_prime_generator(bits: int):
                 return n*2 + 1
         n += 12
 
+        # if the pair (n, 2n + 1) is a possible Germain/Safe-prime pair
         if valid_pair_test(n2):
             if isprime(n) and isprime(n2*2 + 1):
                 return n2*2 + 1
         n2 -= 12
 
 def main(args):
+    # parse input
+    if len(args) != 1 and args[0].isdigit():
+        raise argparse.ArgumentTypeError("Invalid input")
     N = int(args[0])
-    P = safe_prime_generator(N)
-    print(P)
+    if N < 6:
+        raise argparse.ArgumentTypeError("Invalid input")
+    print(safe_prime_generator(N))
 
 if __name__ == "__main__":
     main(sys.argv[1:])
