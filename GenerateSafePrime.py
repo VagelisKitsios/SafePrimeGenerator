@@ -1,9 +1,8 @@
-import sys, argparse
+import sys
 from argparse import ArgumentTypeError
 from random import getrandbits
 from sympy import primerange
 from gmpy2 import is_strong_bpsw_prp as isprime
-from sympy.core.facts import apply_beta_to_alpha_route
 
 
 def safe_prime_generator(bits: int):
@@ -15,7 +14,7 @@ def safe_prime_generator(bits: int):
             if not a or a == (k-1)//2:
                 return False
         return True
-
+# redundant
     n = getrandbits(bits-1)   # generate a random 2048-bit number
     if n.bit_length() < bits-1: # if the leftmost bit happens to be 0
         n += 2**(bits-2)
@@ -39,7 +38,7 @@ def main(args):
     if len(args) != 1:
         raise ArgumentTypeError("Invalid number of arguments")
     elif not args[0].isdigit() and int(args[0]) >= 6:
-        raise argparse.ArgumentTypeError("Input must be an integer greater than 5")
+        raise ArgumentTypeError("Input must be an integer greater than 5")
     print(safe_prime_generator(int(args[0])))
 
 if __name__ == "__main__":
